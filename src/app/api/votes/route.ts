@@ -1,6 +1,5 @@
 // app/api/votes/route.ts
 import { db as prisma } from '@/lib/db'
-export const revalidate = 220 // 30 minutos
 
 export async function GET(request: Request) {
     

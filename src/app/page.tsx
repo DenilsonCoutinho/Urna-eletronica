@@ -118,7 +118,7 @@ export default function Home() {
       </section>
 
       {/* RESULTADOS POR REGIÃO*/}
-      <section className="bg-white py-20 px-4 text-center">
+      {/* <section className="bg-white py-20 px-4 text-center">
 
         <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
           Resultados Por Região
@@ -157,7 +157,7 @@ export default function Home() {
             </>
           }
         </div>
-      </section>
+      </section> */}
 
       {/* CTA FINAL */}
       <section className="bg-emerald-500 py-20 px-4 text-white text-center space-y-6">
