@@ -1,0 +1,46 @@
+// MONGODB
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String             @unique
+  region      RegionProps[] // Norte, Nordeste, Sul, Sudeste, Centro-Oeste
+  voteIn      CandidateInfo[] // candidatos que votaria
+  notVoteIn   CandidateInfo[] // candidatos que NÃO votaria
+  ifYouKnow   IfYouKnowProps[] // Resposta da pergunta 4
+  whereYouSaw WhereYouSawProps[] // Resposta da pergunta 5
+  createdAt   DateTime           @default(now())
+}
+
+type RegionProps {
+  region String
+  id     String
+}
+
+type WhereYouSawProps {
+  id   String
+  name String
+}
+
+type CandidateInfo {
+  id   String
+  name String
+}
+
+type IfYouKnowProps {
+  description String
+  id          String
+}
+
+model Candidate {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+}

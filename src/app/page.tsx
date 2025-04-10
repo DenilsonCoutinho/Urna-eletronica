@@ -1,103 +1,184 @@
-import Image from "next/image";
+"use client"
+import Link from "next/link";
+import SplashCursor from "../../components/SplashCursor/SplashCursor";
+import { GetNoteVoteIn } from "./service/getNotVoteIn";
+import { useEffect, useState } from "react";
+import { GetVoteIn } from "./service/getVoteIn";
+import GetVoteByRegion from "./service/getVoteByRegion";
+import { useQuery } from "@tanstack/react-query";
+import { useVotes } from "../../hooks/fetchVote";
+type PropsNoteVoteIn = {
+  name: string;
+  id: string;
+  votes: number;
+}
 
+type Region = {
+  region: string
+  id: string
+}
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const regions: Region[] = [{ region: 'Norte', id: "1" }, { region: 'Nordeste', id: "2" }, { region: 'Centro-Oeste', id: "3" }, { region: 'Sudeste', id: "4" }, { region: 'Sul', id: "5" }, { region: 'Todos', id: "6" }];
+  // const { data } = useQuery({ queryKey: ['votes'], queryFn: GetVoteIn })
+  const [region, setRegion] = useState<string | undefined>()
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const [voteIn, setVoteIn] = useState<PropsNoteVoteIn[] | undefined>()
+  const [voteByRegion, setVoteByRegion] = useState<any>()
+  const [regionSelected, setRegionSelected] = useState<string>("")
+  const { data, isLoading } = useVotes(regionSelected)
+  async function getNotVoteIn() {
+    const data = await GetVoteIn()
+    setVoteIn(data)
+  }
+
+  async function getVoteByRegion() {
+    const data = await GetVoteByRegion(regionSelected)
+    setVoteByRegion(data)
+  }
+
+
+  useEffect(() => {
+    getVoteByRegion()
+  }, [regionSelected])
+
+  useEffect(() => {
+    getNotVoteIn()
+  }, [])
+  return (
+    <main className="flex flex-col">
+      {/* HERO */}
+      <section className="relative overflow-hidden min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white text-center space-y-6">
+        {/* <SplashCursor /> */}
+        <h1 className="text-4xl md:text-6xl select-none font-extrabold leading-tight">
+          O Voto que Ninguém Controla.
+        </h1>
+        <p className="text-lg md:text-xl text-slate-300 select-none">
+          Chega de manipulação. Aqui sua opinião tem poder real.
+        </p>
+        <Link href={"/questions"}>
+          <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition">
+            Participar da Pesquisa
+          </button>
+        </Link>
+      </section>
+
+
+      {/* SOLUÇÃO */}
+      <section className="bg-slate-100 py-20 px-4 text-center space-y-8">
+        <h2 className="text-3xl md:text-5xl font-bold">Aqui é diferente.</h2>
+        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8 text-slate-700">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="font-semibold text-xl mb-2">100% Anônimo</h3>
+            <p>Ninguém saberá em quem você votou.</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="font-semibold text-xl mb-2">Sem manipulação</h3>
+            <p>Os votos aparecem como são. Sem filtros, sem ajustes.</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="font-semibold text-xl mb-2">Aberto pra todos</h3>
+            <p>Qualquer pessoa pode votar e ver os resultados em tempo real.</p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+      <section className="bg-slate-900 py-20 px-4 text-white text-center space-y-8">
+        <h2 className="text-3xl md:text-5xl font-bold">Como funciona?</h2>
+        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+          <div>
+            <span className="text-emerald-500 text-4xl font-extrabold">1</span>
+            <p className="mt-2">Responda algumas perguntas rápidas</p>
+          </div>
+          <div>
+            <span className="text-emerald-500 text-4xl font-extrabold">2</span>
+            <p className="mt-2">Vote de forma anônima</p>
+          </div>
+          <div>
+            <span className="text-emerald-500 text-4xl font-extrabold">3</span>
+            <p className="mt-2">Veja o resultado em tempo real</p>
+          </div>
+        </div>
+      </section>
+
+      {/* RESULTADOS */}
+      <section className="bg-white py-20 px-4 text-center">
+        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
+          Resultados Parciais
+        </h2>
+        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6 select-none">
+          {voteIn?.map((item) => (
+            <div
+              key={item.name}
+              className="border  border-slate-200 rounded-xl p-6 bg-slate-50 shadow-md"
+            >
+              <h3 className="text-xl font-bold text-slate-900">{item.name}</h3>
+              <p className="text-md font-bold text-emerald-600 mt-2">{item.votes} {item.votes > 1 ? 'votos' : "voto"}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* RESULTADOS POR REGIÃO*/}
+      <section className="bg-white py-20 px-4 text-center">
+
+        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
+          Resultados Por Região
+        </h2>
+        <div className="flex flex-row justify-center mb-6 items-center gap-3">
+          {
+            regions.map((e) => {
+              return <div
+                onClick={() => setRegionSelected(e.region)}
+                key={e?.id}
+                className="border border-slate-200 rounded-xl p-6 bg-slate-50 shadow-md"
+              >
+                <p className="text-black">{e.region}</p>
+              </div>
+            })
+          }
+        </div>
+        <div className="max-w-[900px] w-full mx-auto flex flex-wrap items-center gap-3">
+          {data?.length > 0 ? data?.map((item: any) => {
+            return <div
+              // key={item?._id?.candidate}
+
+              className="border max-w-[300px] h-[170px] border-slate-200 rounded-xl p-6 bg-slate-50 shadow-md"
+            >
+              <h3 className="text-xl font-bold text-slate-900">{item?._id?.candidate}</h3>
+              <p className="text-md font-bold text-emerald-600 mt-2">{item?.totVotes} {item?.totVotes > 1 ? 'votos' : "voto"}</p>
+              <h3 className="text-xl font-bold text-slate-900">{item?._id.region[0]}</h3>
+            </div>
+
+          })
+            :
+            <>
+              <div className="flex justify-center items-center h-72 w-full">
+                <h1 className="text-black text-center">Dados indisponiveis!</h1>
+              </div>
+            </>
+          }
+        </div>
+      </section>
+
+      {/* CTA FINAL */}
+      <section className="bg-emerald-500 py-20 px-4 text-white text-center space-y-6">
+        <h2 className="text-3xl md:text-5xl font-bold">
+          Sua opinião importa.
+        </h2>
+        <p className="text-lg">
+          Junte-se a milhares de brasileiros que estão votando de verdade.
+        </p>
+        <Link href={"/questions"} className="cursor-pointer">
+          <button className="bg-white cursor-pointer text-emerald-600 font-semibold px-8 py-4 rounded-2xl text-lg hover:bg-slate-100 transition">
+            Quero Votar Agora
+          </button>
+        </Link>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-slate-950 py-6 text-center text-slate-500 text-sm">
+        Feito com verdade, por quem acredita no povo.
       </footer>
-    </div>
-  );
+
+    </main>
+  )
 }
