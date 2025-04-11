@@ -23,17 +23,17 @@ type Region = {
   region: string
   id: string
 }
-export default async function CreateUser(presidentNeverVote: PresidentNeverVote[], ifYouKnow: IfYouKnowProps, presidentSelected: PresidentSelected, selectedRegion: Region, whereYouSaw: WhereYouSaw[], email: string) {
+export default async function CreateUser(presidentNeverVote: PresidentNeverVote[], ifYouKnow: IfYouKnowProps, presidentSelected: PresidentSelected, selectedRegion: Region, whereYouSaw: WhereYouSaw[], email: string,name: string) {
   const payloadNotVote = presidentNeverVote.map(item => ({
     name: item.name,
     id: item.id
   }))
-
-  const payloadWhereYouSaw = whereYouSaw.map(item => item.name)
-
+  if(!presidentSelected?.name){
+    throw new Error("Dados inválidos!")
+  }
   await prisma.user.create({
     data: {
-      name: "Lucas",
+      name: name,
       email: email,
       region: selectedRegion,
       voteIn: presidentSelected,

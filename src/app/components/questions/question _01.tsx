@@ -1,6 +1,6 @@
 'use client';
 import { useCurrentQuestion } from "../../../../context/currentQuestion";
-import { useQuestionStore } from "@/app/zustand/useQuestionStore";
+import { useFinishedStore, useQuestionStore } from "@/app/zustand/useQuestionStore";
 type Region = {
     region: string
     id: string
@@ -9,6 +9,7 @@ export default function Question_01() {
     const regions: Region[] = [{ region: 'Norte', id: "1" }, { region: 'Nordeste', id: "2" }, { region: 'Centro-Oeste', id: "3" }, { region: 'Sudeste', id: "4" }, { region: 'Sul', id: "5" }];
     const { currentQuestion, setCurrentQuestion } = useCurrentQuestion()
     const { selectedRegion, setSelectedRegion } = useQuestionStore()
+    const { setFinished, finished } = useFinishedStore()
 
     return (
         <div className="w-full md:px-10 px-2">
@@ -34,7 +35,7 @@ export default function Question_01() {
                         <button onClick={() => setCurrentQuestion((prev) => prev - 1)} className="px-4 py-2 border rounded-lg">Voltar</button>
                     }
                     {
-                        <button disabled={selectedRegion.length === 0 && true} onClick={() => setCurrentQuestion((prev) => prev + 1)} className={`${selectedRegion.length === 0 ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 cursor-pointer"}  px-10 shadow-md py-2  text-white rounded-lg`}>Próximo</button>
+                        <button disabled={selectedRegion.length === 0 && true} onClick={() => {setCurrentQuestion((prev) => prev + 1);setFinished(true)}} className={`${selectedRegion.length === 0 ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 cursor-pointer"}  px-10 shadow-md py-2  text-white rounded-lg`}>Próximo</button>
                     }
                 </div>
             </div>

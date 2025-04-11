@@ -23,6 +23,10 @@ type Region = {
     region: string
     id: string
 }
+
+type Finished = {
+    finished: boolean
+}
 type QuestionState = {
     presidentNeverVote: PresidentNeverVote[]
     presidentSelected: PresidentSelected[]
@@ -35,7 +39,22 @@ type QuestionState = {
     setIfYouKnow: (description: string, id: string) => void
     setSelectedNeverVotePresident: (name: string, id: string) => void
 }
+type FinishedStore = {
+    setFinished: (finished: boolean) => void
+    finished: boolean,
 
+}
+export const useFinishedStore = create<FinishedStore>()(
+    persist(
+        (set) => ({
+            finished: false,
+            setFinished: (finished) => set({ finished }),
+        }),
+        {
+            name: 'finished-storage', // localStorage: question-storage
+        }
+    )
+)
 export const useQuestionStore = create<QuestionState>()(
     persist(
         (set) => ({

@@ -4,8 +4,7 @@ import { fetchVotes } from "../../hooks/fetchVote";
 
 
 export default async function Home() {
-  const votes = await fetchVotes()
-
+  const votes = await fetchVotes() || []
   return (
     <main className="flex flex-col">
       {/* HERO */}
@@ -69,7 +68,8 @@ export default async function Home() {
         <div className="max-w-[1100px] w-full mx-auto flex justify-center flex-wrap items-center gap-5">
           {votes ? votes?.map((item: any) => (
             <div
-              key={item.name}
+
+              key={item._id.candidate}
               className="border max-w-[300px] h-[170px] w-full border-slate-200 rounded-xl p-6 bg-slate-50 shadow-md"
             >
               <h3 className="text-xl font-bold text-slate-900">{item._id.candidate}</h3>
