@@ -1,5 +1,6 @@
 export async function fetchVotes() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/votes`, {
+    const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"
+    const res = await fetch(`${baseUrl}/api/votes`, {
         next: { revalidate: 600 } // 10 minutos
     }
     )
