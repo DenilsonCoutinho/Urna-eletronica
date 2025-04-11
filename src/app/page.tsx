@@ -1,14 +1,23 @@
+import { db as prisma } from '@/lib/db'
 
 import Link from "next/link";
+export const revalidate = 60 // revalida a cada 60 segundos
 
 export default async function Home() {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"
-  const res = await fetch(`${baseUrl}/api/votes`, {
-      next: { revalidate: 600 } // 10 minutos
-  }
-  )
-  const votes = await res.json()
- 
+ const pipeline: any[] = [
+    { $unwind: "$voteIn" },
+    { 
+      $group: {
+        _id: {
+          candidate: "$voteIn.name"
+        },
+        totVotes: { $sum: 1 }
+      }
+    },
+    { $sort: { "_id.region": 1, "totVotes": -1 } }
+  ]
+
+  const votes:any = await prisma.user.aggregateRaw({ pipeline })
 
   return (
     <main className="flex flex-col">
@@ -78,7 +87,7 @@ export default async function Home() {
               className="border max-w-[300px] h-[170px] w-full border-slate-200 rounded-xl p-6 bg-slate-50 shadow-md"
             >
               <h3 className="text-xl font-bold text-slate-900">{item._id.candidate}</h3>
-              <p className="text-md font-bold text-emerald-600 mt-2">{item.totVotes} {item.votes > 1 ? 'votos' : "voto"}</p>
+              <p className="text-md font-bold text-emerald-600 mt-2">{item.totVotes} {item.totVotes > 1 ? 'votos' : "voto"}</p>
             </div>
           ))
             :
