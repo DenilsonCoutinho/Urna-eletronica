@@ -1,49 +1,11 @@
-"use client"
+
 import Link from "next/link";
-import SplashCursor from "../../components/SplashCursor/SplashCursor";
-import { GetNoteVoteIn } from "./service/getNotVoteIn";
-import { useEffect, useState } from "react";
-import { GetVoteIn } from "./service/getVoteIn";
-import GetVoteByRegion from "./service/getVoteByRegion";
-import { useQuery } from "@tanstack/react-query";
-import { useVotes } from "../../hooks/fetchVote";
-type PropsNoteVoteIn = {
-  name: string;
-  id: string;
-  votes: number;
-}
-
-type Region = {
-  region: string
-  id: string
-}
-export default function Home() {
-  const regions: Region[] = [{ region: 'Norte', id: "1" }, { region: 'Nordeste', id: "2" }, { region: 'Centro-Oeste', id: "3" }, { region: 'Sudeste', id: "4" }, { region: 'Sul', id: "5" }, { region: 'Todos', id: "6" }];
-  // const { data } = useQuery({ queryKey: ['votes'], queryFn: GetVoteIn })
-  const [region, setRegion] = useState<string | undefined>()
-
-  const [voteIn, setVoteIn] = useState<PropsNoteVoteIn[] | undefined>()
-  const [voteByRegion, setVoteByRegion] = useState<any>()
-  const [regionSelected, setRegionSelected] = useState<string>("")
-  const { data, isLoading } = useVotes(regionSelected)
-  async function getNotVoteIn() {
-    const data = await GetVoteIn()
-    setVoteIn(data)
-  }
-
-  async function getVoteByRegion() {
-    const data = await GetVoteByRegion(regionSelected)
-    setVoteByRegion(data)
-  }
+import { fetchVotes } from "../../hooks/fetchVote";
 
 
-  useEffect(() => {
-    getVoteByRegion()
-  }, [regionSelected])
+export default async function Home() {
+  const votes = await fetchVotes()
 
-  useEffect(() => {
-    getNotVoteIn()
-  }, [])
   return (
     <main className="flex flex-col">
       {/* HERO */}
@@ -104,16 +66,22 @@ export default function Home() {
         <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
           Resultados Parciais
         </h2>
-        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6 select-none">
-          {voteIn?.map((item) => (
+        <div className="max-w-[1100px] w-full mx-auto flex justify-center flex-wrap items-center gap-5">
+          {votes ? votes?.map((item: any) => (
             <div
               key={item.name}
-              className="border  border-slate-200 rounded-xl p-6 bg-slate-50 shadow-md"
+              className="border max-w-[300px] h-[170px] w-full border-slate-200 rounded-xl p-6 bg-slate-50 shadow-md"
             >
-              <h3 className="text-xl font-bold text-slate-900">{item.name}</h3>
-              <p className="text-md font-bold text-emerald-600 mt-2">{item.votes} {item.votes > 1 ? 'votos' : "voto"}</p>
+              <h3 className="text-xl font-bold text-slate-900">{item._id.candidate}</h3>
+              <p className="text-md font-bold text-emerald-600 mt-2">{item.totVotes} {item.votes > 1 ? 'votos' : "voto"}</p>
             </div>
-          ))}
+          ))
+            :
+            <>
+              <div className="flex justify-center items-center h-72 w-full">
+                <h1 className="text-black text-center">Dados indisponiveis!</h1>
+              </div>
+            </>}
         </div>
       </section>
 

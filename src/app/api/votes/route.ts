@@ -11,8 +11,6 @@ export async function GET(request: Request) {
     { 
       $group: {
         _id: {
-          region: "$region.region",
-          idRegion: "$region.id",
           candidate: "$voteIn.name"
         },
         totVotes: { $sum: 1 }
@@ -21,9 +19,9 @@ export async function GET(request: Request) {
     { $sort: { "_id.region": 1, "totVotes": -1 } }
   ]
 
-  if (region) {
-    pipeline.unshift({ $match: { "region.region": region } })
-  }
+  // if (region) {
+  //   pipeline.unshift({ $match: { "region.region": region } })
+  // }
 
   const votes = await prisma.user.aggregateRaw({ pipeline })
 
