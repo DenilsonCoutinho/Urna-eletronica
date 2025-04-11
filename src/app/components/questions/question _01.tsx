@@ -35,7 +35,7 @@ export default function Question_01() {
                         <button onClick={() => setCurrentQuestion((prev) => prev - 1)} className="px-4 py-2 border rounded-lg">Voltar</button>
                     }
                     {
-                        <button disabled={selectedRegion.length === 0 && true} onClick={() => {setCurrentQuestion((prev) => prev + 1);setFinished(true)}} className={`${selectedRegion.length === 0 ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 cursor-pointer"}  px-10 shadow-md py-2  text-white rounded-lg`}>Próximo</button>
+                        <button disabled={selectedRegion.length === 0 && true} onClick={() => {setCurrentQuestion((prev) => prev + 1);setFinished(false)}} className={`${selectedRegion.length === 0 ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 cursor-pointer"}  px-10 shadow-md py-2  text-white rounded-lg`}>Próximo</button>
                     }
                 </div>
             </div>

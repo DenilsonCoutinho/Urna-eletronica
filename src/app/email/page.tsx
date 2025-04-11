@@ -7,6 +7,7 @@ import Loader from "../components/loader";
 import Link from "next/link";
 import GetVoteByRegion from "../service/getVoteByRegion";
 import { useRouter } from "next/navigation";
+import { fetchEmail } from "../../../hooks/fetchEmails";
 
 export default function Email() {
     const { presidentNeverVote, ifYouKnow, presidentSelected, selectedRegion, whereYouSaw } = useQuestionStore()
@@ -22,7 +23,11 @@ export default function Email() {
     const route = useRouter()
 
     async function handleSubmit() {
-        
+        const getEmail = await fetchEmail(email) || []
+        if (getEmail[0]?._id?.email) {
+            return alert("Email já foi cadastrado!")
+        }
+
         setErrorName("")
         setError("")
         try {
@@ -45,8 +50,8 @@ export default function Email() {
             setIsOk(true)
             setFinished(true)
             return localStorage.removeItem('question-storage')
-        } catch (error:unknown) {
-            if(error instanceof Error){
+        } catch (error: unknown) {
+            if (error instanceof Error) {
                 alert("Você não preencheu o formulário corretamente")
                 route.replace('/questions')
             }
