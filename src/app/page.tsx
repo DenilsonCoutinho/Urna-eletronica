@@ -4,7 +4,8 @@ import { fetchVotes } from "../../hooks/fetchVote";
 
 
 export default async function Home() {
-  const votes = await fetchVotes() || []
+  const votes:any = []
+  // await fetchVotes() || []
 
   return (
     <main className="flex flex-col">
