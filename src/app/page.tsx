@@ -5,7 +5,7 @@ import { fetchVotes } from '../../hooks/fetchVote';
 export const revalidate = 60 // revalida a cada 60 segundos
 
 export default async function Home() {
-  const votes = await fetchVotes()
+  const votes = await fetchVotes() || []
 
   return (
     <main className="flex flex-col">
@@ -64,9 +64,23 @@ export default async function Home() {
 
       {/* RESULTADOS */}
       <section className="bg-white py-20 px-4 text-center">
-        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
-          Resultados Parciais
-        </h2>
+        <div className='flex flex-col items-center pb-10'>
+          <h2 className="text-3xl md:text-5xl font-bold text-slate-900 ">
+            Resultados Parciais
+          </h2>
+          <div className='flex flex-row items-center'>
+            <svg
+              width={24}
+              height={24}
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48             10-10S17.52 2 12 2zm.88 17h-1.75v-1.75h1.75V19zm1.54-7.28l-.9.92c-.66.66-1.02             1.12-1.02 2.11h-1.75v-.29c0-1.05.36-1.66 1.02-2.32l1.24-1.26c.36-.36.54-.86.54-1.36             0-1.05-.85-1.9-1.9-1.9s-1.9.85-1.9 1.9H9.13c0-2.02 1.64-3.66 3.66-3.66s3.66 1.64             3.66 3.66c0 .73-.29 1.42-.78 1.93z" />
+            </svg>
+            <p className='font-medium'>Atualiza a cada 10 minutos</p>
+          </div>
+        </div>
         <div className="max-w-[1100px] w-full mx-auto flex justify-center flex-wrap items-center gap-5">
           {votes ? votes?.map((item: any) => (
             <div
