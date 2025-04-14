@@ -1,23 +1,11 @@
 import { db as prisma } from '@/lib/db'
 
 import Link from "next/link";
+import { fetchVotes } from '../../hooks/fetchVote';
 export const revalidate = 60 // revalida a cada 60 segundos
 
 export default async function Home() {
- const pipeline: any[] = [
-    { $unwind: "$voteIn" },
-    { 
-      $group: {
-        _id: {
-          candidate: "$voteIn.name"
-        },
-        totVotes: { $sum: 1 }
-      }
-    },
-    { $sort: { "_id.region": 1, "totVotes": -1 } }
-  ]
-
-  const votes:any = await prisma.user.aggregateRaw({ pipeline })
+  const votes = await fetchVotes()
 
   return (
     <main className="flex flex-col">

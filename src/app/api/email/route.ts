@@ -5,7 +5,9 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const email = searchParams.get('email')
 
-      if(!email) return Response.json([])
+    if (!email) {
+      return Response.json({ error: 'Email não informado' }, { status: 400 })
+    }
     const pipeline: any[] = [
         { $match: { email: email } },
         { $unwind: "$voteIn" },
