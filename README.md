@@ -13,3 +13,4 @@ e outras informações relevantes para análise de tendências políticas.
 - **Tailwind CSS** (ou outro, dependendo do seu setup)
 - **MongoDB Atlas** (base de dados hospedada na nuvem)
 - **Vercel** (deploy)
+<img width="1914" height="880" alt="image" src="https://github.com/user-attachments/assets/71e08a36-26ae-4272-a309-c9178f09e252" />
